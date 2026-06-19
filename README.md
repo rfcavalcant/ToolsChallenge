@@ -1,4 +1,4 @@
-[![AR Phoenix](https://arphoenix.com.br/wp-content/uploads/2022/07/LOGO-CENTRAL-BLACK-RED.png)](https://arphoenix.com.br/)
+[![AR Phoenix](https://media.licdn.com/dms/image/v2/C4E1BAQHRA1zgPSQ6FQ/company-background_10000/company-background_10000/0/1584243318556/toolssoftware_cover?e=2147483647&v=beta&t=Vo-FwQh9Kbr9dkReYHfPKI6eQFmPnVoYlPBEEBzkyIA)](https://tools.com.br)
 # ToolsChallenge
 
 API REST de pagamentos de cartao de credito desenvolvida como resposta ao desafio tecnico proposto. O projeto foi implementado com Spring Boot 3.5, Java 21 e persistencia em memoria, mantendo o escopo estrito do enunciado: pagamento, estorno e consulta de transacoes.
