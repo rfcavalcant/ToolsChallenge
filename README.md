@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.jpg" alt="Tools Software" width="300">
+</p>
+
 # ToolsChallenge
 
 API REST de pagamentos de cartao de credito desenvolvida como resposta ao desafio tecnico proposto. O projeto foi implementado com Spring Boot 3.5, Java 21 e persistencia em memoria, mantendo o escopo estrito do enunciado: pagamento, estorno e consulta de transacoes.
