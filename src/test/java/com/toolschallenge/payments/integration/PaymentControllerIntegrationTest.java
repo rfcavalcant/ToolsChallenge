@@ -42,7 +42,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "4444********1234",
                                     "id": "100023568900001",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "01/05/2021 18:30:00",
                                       "estabelecimento": "PetShop Mundo cao"
                                     },
@@ -73,7 +73,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "4444********1234",
                                     "id": "100023568900002",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "01/05/2021 18:30:00",
                                       "estabelecimento": "PetShop Mundo cao"
                                     },
@@ -96,7 +96,7 @@ class PaymentControllerIntegrationTest {
                     "cartao": "4444********1234",
                     "id": "100023568900003",
                     "descricao": {
-                      "valor": 500.50,
+                      "valor": "500.50",
                       "dataHora": "01/05/2021 18:30:00",
                       "estabelecimento": "PetShop Mundo cao"
                     },
@@ -126,7 +126,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "4444********1234",
                                     "id": "100023568900004",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "01/05/2021 18:30:00",
                                       "estabelecimento": "PetShop Mundo cao"
                                     },
@@ -154,7 +154,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "4444********1234",
                                     "id": "100023568900005",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "01/05/2021 18:30:00",
                                       "estabelecimento": "PetShop Mundo cao"
                                     },
@@ -185,7 +185,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "4444********1234",
                                     "id": "100023568900006",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "01/05/2021 18:30:00",
                                       "estabelecimento": "PetShop Mundo cao"
                                     },
@@ -213,7 +213,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "4444********1234",
                                     "id": "100023568900007",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "01/05/2021 18:30:00",
                                       "estabelecimento": "PetShop Mundo cao"
                                     },
@@ -249,7 +249,7 @@ class PaymentControllerIntegrationTest {
                                     "cartao": "44441234",
                                     "id": "",
                                     "descricao": {
-                                      "valor": 500.50,
+                                      "valor": "500.50",
                                       "dataHora": "2021-05-01T18:30:00",
                                       "estabelecimento": ""
                                     },
@@ -262,5 +262,31 @@ class PaymentControllerIntegrationTest {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.details", hasSize(6)));
+    }
+
+    @Test
+    void shouldRejectNonNumericAmountString() throws Exception {
+        mockMvc.perform(post("/pagamentos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "transacao": {
+                                    "cartao": "4444********1234",
+                                    "id": "100023568900008",
+                                    "descricao": {
+                                      "valor": "abc",
+                                      "dataHora": "01/05/2021 18:30:00",
+                                      "estabelecimento": "PetShop Mundo cao"
+                                    },
+                                    "formaPagamento": {
+                                      "tipo": "AVISTA",
+                                      "parcelas": "1"
+                                    }
+                                  }
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.details", hasSize(1)))
+                .andExpect(jsonPath("$.details[0]").value("transaction.description.amount: valor deve seguir o formato 500.50"));
     }
 }

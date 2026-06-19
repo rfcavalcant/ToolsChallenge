@@ -9,6 +9,7 @@ import com.toolschallenge.payments.domain.PaymentDescription;
 import com.toolschallenge.payments.domain.PaymentMethod;
 import com.toolschallenge.payments.domain.PaymentMethodType;
 import com.toolschallenge.payments.domain.PaymentTransaction;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -24,7 +25,7 @@ public class PaymentMapper {
                 dto.transaction().card(),
                 dto.transaction().id(),
                 new PaymentDescription(
-                        dto.transaction().description().amount(),
+                        new BigDecimal(dto.transaction().description().amount()),
                         LocalDateTime.parse(dto.transaction().description().dateTime(), DATE_TIME_FORMATTER),
                         dto.transaction().description().establishment(),
                         null,

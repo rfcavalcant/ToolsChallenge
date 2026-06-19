@@ -1,4 +1,3 @@
-[![AR Phoenix](https://media.licdn.com/dms/image/v2/C4E1BAQHRA1zgPSQ6FQ/company-background_10000/company-background_10000/0/1584243318556/toolssoftware_cover?e=2147483647&v=beta&t=Vo-FwQh9Kbr9dkReYHfPKI6eQFmPnVoYlPBEEBzkyIA)](https://tools.com.br)
 # ToolsChallenge
 
 API REST de pagamentos de cartao de credito desenvolvida como resposta ao desafio tecnico proposto. O projeto foi implementado com Spring Boot 3.5, Java 21 e persistencia em memoria, mantendo o escopo estrito do enunciado: pagamento, estorno e consulta de transacoes.
@@ -32,6 +31,112 @@ mvn clean test
 | GET | `/pagamentos` | Lista todas as transacoes |
 | GET | `/pagamentos/{id}` | Consulta uma transacao por id |
 
+## Roteiro rapido de demonstracao manual
+
+Se voce quiser demonstrar a API ao vivo em entrevista, esta sequencia cobre o fluxo feliz e os casos de borda mais provaveis.
+
+### 1. Subir a aplicacao
+
+```bash
+mvn spring-boot:run
+```
+
+### 2. Criar um pagamento autorizado
+
+```bash
+curl --request POST "http://localhost:8080/pagamentos" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "transacao": {
+      "cartao": "4444********1234",
+      "id": "100023568900001",
+      "descricao": {
+        "valor": "500.50",
+        "dataHora": "01/05/2021 18:30:00",
+        "estabelecimento": "PetShop Mundo cao"
+      },
+      "formaPagamento": {
+        "tipo": "AVISTA",
+        "parcelas": "1"
+      }
+    }
+  }'
+```
+
+### 3. Consultar a transacao criada
+
+```bash
+curl "http://localhost:8080/pagamentos/100023568900001"
+```
+
+### 4. Listar todas as transacoes
+
+```bash
+curl "http://localhost:8080/pagamentos"
+```
+
+### 5. Estornar a transacao
+
+```bash
+curl --request POST "http://localhost:8080/pagamentos/100023568900001/estorno"
+```
+
+### 6. Tentar estornar de novo e validar o `409 Conflict`
+
+```bash
+curl --request POST "http://localhost:8080/pagamentos/100023568900001/estorno"
+```
+
+### 7. Tentar recriar o mesmo id e validar o `409 Conflict`
+
+```bash
+curl --request POST "http://localhost:8080/pagamentos" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "transacao": {
+      "cartao": "4444********1234",
+      "id": "100023568900001",
+      "descricao": {
+        "valor": "500.50",
+        "dataHora": "01/05/2021 18:30:00",
+        "estabelecimento": "PetShop Mundo cao"
+      },
+      "formaPagamento": {
+        "tipo": "AVISTA",
+        "parcelas": "1"
+      }
+    }
+  }'
+```
+
+### 8. Enviar payload invalido e validar o `400 Bad Request`
+
+```bash
+curl --request POST "http://localhost:8080/pagamentos" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "transacao": {
+      "cartao": "44441234",
+      "id": "",
+      "descricao": {
+        "valor": "500.50",
+        "dataHora": "2021-05-01T18:30:00",
+        "estabelecimento": ""
+      },
+      "formaPagamento": {
+        "tipo": "PIX",
+        "parcelas": "A"
+      }
+    }
+  }'
+```
+
+### 9. Consultar id inexistente e validar o `404 Not Found`
+
+```bash
+curl "http://localhost:8080/pagamentos/nao-existe"
+```
+
 ### Exemplo de pagamento
 
 ```bash
@@ -42,7 +147,7 @@ curl --request POST "http://localhost:8080/pagamentos" \
       "cartao": "4444********1234",
       "id": "100023568900001",
       "descricao": {
-        "valor": 500.50,
+        "valor": "500.50",
         "dataHora": "01/05/2021 18:30:00",
         "estabelecimento": "PetShop Mundo cao"
       },

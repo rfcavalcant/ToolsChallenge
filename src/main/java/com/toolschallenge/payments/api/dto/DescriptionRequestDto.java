@@ -1,15 +1,16 @@
 package com.toolschallenge.payments.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import java.math.BigDecimal;
 
 public record DescriptionRequestDto(
         @JsonProperty("valor")
-        @NotNull
-        BigDecimal amount,
+        @NotBlank
+        @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "valor deve seguir o formato 500.50")
+        @JsonDeserialize(using = NumericStringDeserializer.class)
+        String amount,
 
         @JsonProperty("dataHora")
         @NotBlank
